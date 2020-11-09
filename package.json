@@ -29,8 +29,10 @@
     },
     "homepage": "https://github.com/Cete4/Project_Grovyle#readme",
     "dependencies": {
+        "dotenv": "^8.2.0",
         "express": "^4.17.1",
         "mysql2": "^2.2.5",
+        "path": "^0.12.7",
         "sequelize": "^6.3.5"
     },
     "devDependencies": {

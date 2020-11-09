@@ -1,44 +1,36 @@
+require('dotenv').config()
+const key = process.env.API_KEY;
 let db = require("../models");
+console.log("peter", key);
 
-module.exports = function(app) {
-    app.get("/api/Activities", function(req, res) {
-        // Here we add an "include" property to our options in our findAll query
-        // We set the value to an array of the models we want to include in a left outer join
-        // In this case, just db.Post
-        db.Activities.findAll({
-            include: [db.Post]
-        }).then(function(dbActivities) {
-            res.json(dbActivities);
-        });
-    });
+let path = require("path");
+let router = require("express").Router();
 
-    app.get("/api/authors/:id", function(req, res) {
-        // Here we add an "include" property to our options in our findOne query
-        // We set the value to an array of the models we want to include in a left outer join
-        // In this case, just db.Post
-        db.Activities.findOne({
-            where: {
-                id: req.params.id
-            },
-            include: [db.Post]
-        }).then(function(dbActivities) {
-            res.json(dbActivities);
-        });
+router.get("/api/key", function(req, res) {
+    res.json(key)
+});
+router.delete("/api/activities/:TEMP?", function(req, res) {
+    db.activities.destroy({
+      where: {
+        TEMP: req.params.TEMP
+      }
+    }).then(function(dbactivities) {
+      res.json(dbactivities);
     });
+});
+router.get("/api/activities/:TEMP?", function(req, res) {
+    db.activities.findOne({
+        where: {
+            TEMP: req.params.TEMP
+        }
+    }).then(function(dbactivities) {
+        res.json(dbactivities)
+    });
+});
+router.post("/api/activities", function(req, res) {
+    db.activities.create(req.body).then(function(dbactivities) {
+        res.json(dbactivities);
+    });
+});
 
-    app.post("/api/Activities", function(req, res) {
-        db.Author.create(req.body).then(function(dbAuthor) {
-            res.json(dbAuthor);
-        });
-    });
-
-    app.delete("/api/Activities/:id", function(req, res) {
-        db.Author.destroy({
-            where: {
-                id: req.params.id
-            }
-        }).then(function(dbAuthor) {
-            res.json(dbAuthor);
-        });
-    });
-};
+module.exports = router;
